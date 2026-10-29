@@ -1,0 +1,23 @@
+{
+  "name": "ai-resume-analyzer-pro",
+  "version": "1.0.0",
+  "description": "Production-grade AI Resume Analyzer & ATS Compatibility Engine",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"blue,green\" \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "start": "node server/server.js",
+    "build": "npm --prefix client run build",
+    "test": "npm --prefix server test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.5"
+  }
+}
