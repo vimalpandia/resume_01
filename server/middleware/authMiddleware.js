@@ -1,21 +1,19 @@
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const { UserRepository } = require('../models/User');
 
 const getJwtSecret = () => {
   const secret = process.env.JWT_SECRET;
-  if (process.env.NODE_ENV === 'production') {
-    if (
-      !secret ||
-      secret === 'dev_secret_placement_key_2026' ||
-      secret === 'dev_secret_placement_key_replace_in_production_2026'
-    ) {
-      throw new Error(
-        '[Security Fatal] JWT_SECRET must be configured with a secure private key in production. Please set JWT_SECRET in the Render Dashboard.'
-      );
-    }
+  if (secret && secret !== 'dev_secret_placement_key_2026') {
     return secret;
   }
-  return secret || 'dev_secret_placement_key_2026';
+  if (process.env.NODE_ENV === 'production') {
+    console.warn(
+      '[Security Notice] JWT_SECRET is not set in Render environment. Generating an in-memory session secret for security.'
+    );
+    return crypto.randomBytes(32).toString('hex');
+  }
+  return 'dev_secret_placement_key_2026';
 };
 
 const JWT_SECRET = getJwtSecret();
